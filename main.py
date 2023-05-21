@@ -8,20 +8,27 @@ import cv2
 from shifting import left_menu_to_x
 from shifting import main_menu_to_x
 from shifting import battle_general_to_x
+from operation import change_equipment as ceq
+
+import general_funcs as gf
+
+import event_handle as eh
+
+pytesseract.pytesseract.tesseract_cmd = 'D:/Tesseract/tesseract.exe'
 
 
 def battle_finish_check():  # 检查战斗是否终止
-    if check_color(970, 555, 255, 255, 255) and check_color(1015, 549, 255, 255, 255):
-        if check_color(998, 304, 226, 171, 80) and check_color(1059, 555, 255, 255, 255):
-            if check_color(991, 384, 230, 211, 107) and check_color(996, 459, 239, 243, 148):
+    if gf.check_color(970, 555, 255, 255, 255) and gf.check_color(1015, 549, 255, 255, 255):
+        if gf.check_color(998, 304, 226, 171, 80) and gf.check_color(1059, 555, 255, 255, 255):
+            if gf.check_color(991, 384, 230, 211, 107) and gf.check_color(996, 459, 239, 243, 148):
                 return True
     return False
 
 
 def whole_12_4_finished():  # 检查12-4整体是否结束
-    if check_color(609, 175, 255, 255, 255) and check_color(773, 159, 255, 255, 255):
-        if check_color(694, 169, 255, 255, 255) and check_color(722, 171, 255, 255, 255):
-            if check_color(780, 175, 255, 255, 255) and check_color(853, 162, 82, 113, 181):
+    if gf.check_color(609, 175, 255, 255, 255) and gf.check_color(773, 159, 255, 255, 255):
+        if gf.check_color(694, 169, 255, 255, 255) and gf.check_color(722, 171, 255, 255, 255):
+            if gf.check_color(780, 175, 255, 255, 255) and gf.check_color(853, 162, 82, 113, 181):
                 return True
     return False
 
@@ -31,7 +38,7 @@ def main_thread_enter_12_4_without_selecting():  # 主线不选关直接打12-4
     pyautogui.leftClick(1459, 796)
     time.sleep(0.5)
     # 自律勾上
-    if check_color(1265, 863, 156, 235, 82) is False:
+    if gf.check_color(1265, 863, 156, 235, 82) is False:
         pyautogui.leftClick(1265, 863)
     # 立即出击
     pyautogui.leftClick(1334, 749)
@@ -79,26 +86,16 @@ def after_entering_12_4_to_finish(op):  # 进入12—4以后一直打到结束
     time.sleep(2)
 
 
-def check_color(x, y, r, g, b):  # 检查位置为(x,y)的颜色是否为(r,g,b)
-    screen = ImageGrab.grab()
-    color = screen.getpixel((x, y))
-    screen.close()
-    if color[0] == r and color[1] == g and color[2] == b:
-        return True
-    else:
-        return False
-
-
 def oil_is_ready():  # 被用在收获里判断石油好了没
-    return check_color(219, 90, 60, 61, 60)
+    return gf.check_color(219, 90, 60, 61, 60)
 
 
 def money_is_ready():  # 被用在收获里判断钱好了没
-    return check_color(462, 110, 239, 182, 66)
+    return gf.check_color(462, 110, 239, 182, 66)
 
 
 def books_are_ready():  # 被用在收获里判断书好了没
-    return check_color(704, 110, 74, 82, 104)
+    return gf.check_color(704, 110, 74, 82, 104)
 
 
 def left_menu_to_collect_three_resources():  # 收三种资源
@@ -125,35 +122,25 @@ def debug_print_mouse(a):  # 用于测鼠标位置，输入的a用于表示测�
 
 
 # time.sleep(5)
+# if eh.check_full_storage():
+#     print("nice")
 # main_to_left_menu()
 # left_menu_to_collect_three_resources()
 # time.sleep(2)
-# main_to_battle_general()
-# battle_general_to_main_thread()
+# main_menu_to_x.main_to_battle_general()
+# battle_general_to_x.battle_general_to_main_thread()
 # main_thread_enter_12_4_without_selecting()
-
+#
 # after_entering_12_4_to_finish(False)
 # main_to_left_menu()
 # left_menu_to_missions()
 # main_menu_to_x.main_to_left_menu()
 
 
-pytesseract.pytesseract.tesseract_cmd = 'D:/Tesseract/tesseract.exe'
-
-pic = cv2.imread("D:/img/1.png")
-gray = cv2.cvtColor(pic, cv2.COLOR_BGR2GRAY)
-result = pytesseract.image_to_string(gray, lang='chi_sim', config='--psm 6')
-print("1 " + result)
-
-pic = cv2.imread("D:/img/2.png")
-gray = cv2.cvtColor(pic, cv2.COLOR_BGR2GRAY)
-result = pytesseract.image_to_string(gray, lang='chi_sim', config='--psm 6')
-print("2 " + result)
-
-pic = cv2.imread("D:/img/3.png")
-gray = cv2.cvtColor(pic, cv2.COLOR_BGR2GRAY)
-result = pytesseract.image_to_string(gray, lang='chi_sim', config='--psm 6')
-print("3 " + result)
-
-
-# debug_print_mouse(1)
+# pic = cv2.imread("D:/img/1.png")
+# gray = cv2.cvtColor(pic, cv2.COLOR_BGR2GRAY)
+# result = pytesseract.image_to_string(gray, lang='chi_sim', config='--psm 6')
+# print("1 " + result)
+time.sleep(3)
+eh.full_storage_handle()
+debug_print_mouse(1)
