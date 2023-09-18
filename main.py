@@ -2,88 +2,19 @@ from PIL import ImageGrab
 from PIL import Image
 import time
 import pyautogui
-import pytesseract
 import cv2
+import tkinter as tk
 
 from shifting import left_menu_to_x
 from shifting import main_menu_to_x
 from shifting import battle_general_to_x
+from shifting import recognizing_current_window as recognize
+
 from operation import change_equipment as ceq
 
 import general_funcs as gf
 
 import event_handle as eh
-
-pytesseract.pytesseract.tesseract_cmd = 'D:/Tesseract/tesseract.exe'
-
-
-def battle_finish_check():  # 检查战斗是否终止
-    if gf.check_color(970, 555, 255, 255, 255) and gf.check_color(1015, 549, 255, 255, 255):
-        if gf.check_color(998, 304, 226, 171, 80) and gf.check_color(1059, 555, 255, 255, 255):
-            if gf.check_color(991, 384, 230, 211, 107) and gf.check_color(996, 459, 239, 243, 148):
-                return True
-    return False
-
-
-def whole_12_4_finished():  # 检查12-4整体是否结束
-    if gf.check_color(609, 175, 255, 255, 255) and gf.check_color(773, 159, 255, 255, 255):
-        if gf.check_color(694, 169, 255, 255, 255) and gf.check_color(722, 171, 255, 255, 255):
-            if gf.check_color(780, 175, 255, 255, 255) and gf.check_color(853, 162, 82, 113, 181):
-                return True
-    return False
-
-
-def main_thread_enter_12_4_without_selecting():  # 主线不选关直接打12-4
-    # 选了12-4
-    pyautogui.leftClick(1459, 796)
-    time.sleep(0.5)
-    # 自律勾上
-    if gf.check_color(1265, 863, 156, 235, 82) is False:
-        pyautogui.leftClick(1265, 863)
-    # 立即出击
-    pyautogui.leftClick(1334, 749)
-    time.sleep(0.2)
-    # 取消潜艇
-    pyautogui.leftClick(1636, 690)
-    # 立即出击
-    pyautogui.leftClick(1536, 889)
-    time.sleep(1)
-
-
-def after_entering_12_4_to_finish(op):  # 进入12—4以后一直打到结束
-    # 自律取消掉
-    pyautogui.leftClick(1753, 819)
-    time.sleep(2)
-    # 让自律一个敌人然后取消
-    pyautogui.leftClick(1753, 819)
-    time.sleep(0.05)
-    pyautogui.leftClick(1753, 819)
-    while battle_finish_check() is False:
-        time.sleep(1)
-    pyautogui.leftClick(1548, 951)
-    time.sleep(0.5)
-    pyautogui.leftClick(1548, 951)
-    time.sleep(2)
-    pyautogui.leftClick(1548, 951)
-    time.sleep(2)
-    pyautogui.moveTo(259, 116)
-    pyautogui.dragTo(1719, 879, 0.2, button='left')
-    pyautogui.moveTo(259, 116)
-    pyautogui.dragTo(1719, 879, 0.2, button='left')
-    pyautogui.moveTo(259, 116)
-    pyautogui.dragTo(1719, 879, 0.2, button='left')
-    pyautogui.moveTo(1803, 527)
-    pyautogui.dragTo(600, 527, 0.2, button='left')
-    # 补充弹药
-    pyautogui.leftClick(1410, 824)
-    # 继续自律寻敌
-    pyautogui.leftClick(1753, 819)
-    #
-    while whole_12_4_finished() is False:
-        time.sleep(1)
-    if op is True:
-        pyautogui.leftClick(1222, 877)
-    time.sleep(2)
 
 
 def oil_is_ready():  # 被用在收获里判断石油好了没
@@ -110,20 +41,20 @@ def left_menu_to_collect_three_resources():  # 收三种资源
     time.sleep(0.5)
 
 
-def debug_print_mouse(a):  # 用于测鼠标位置，输入的a用于表示测量间隔
-    while 1:
-        x, y = pyautogui.position()
-        print("x:", x, "y:", y)
-        screen = ImageGrab.grab()
-        color = screen.getpixel((x, y))
-        screen.close()
-        print("r:", color[0], "g:", color[1], "b:", color[2])
-        time.sleep(a)
-
-
+time.sleep(3)
+while True:
+    if gf.extract_word(1130, 870, 1414, 929) == "再次前往":
+        pyautogui.leftClick(1314, 929)
+    eh.full_storage_handle()
+    time.sleep(1)
+#
+# gf.debug_show_mouse_in_window()
+# print(recognize.judge_current())
+# ceq.check_ultra_boss_status()
+# ceq.change_accordingly(ceq.check_ultra_boss_status())
 # time.sleep(5)
-# if eh.check_full_storage():
-#     print("nice")
+# eh.check_full_storage()
+# eh.full_storage_handle()
 # main_to_left_menu()
 # left_menu_to_collect_three_resources()
 # time.sleep(2)
@@ -135,12 +66,5 @@ def debug_print_mouse(a):  # 用于测鼠标位置，输入的a用于表示测�
 # main_to_left_menu()
 # left_menu_to_missions()
 # main_menu_to_x.main_to_left_menu()
-
-
-# pic = cv2.imread("D:/img/1.png")
-# gray = cv2.cvtColor(pic, cv2.COLOR_BGR2GRAY)
-# result = pytesseract.image_to_string(gray, lang='chi_sim', config='--psm 6')
-# print("1 " + result)
-time.sleep(3)
-eh.full_storage_handle()
-debug_print_mouse(1)
+# while 1:
+#     print(recognize.judge_current())
